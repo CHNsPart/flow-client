@@ -5,6 +5,7 @@ This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-
 ## ✨ Author
 
 **Touhidul Islam Chayan**  
+[chnspart.com](https://chnspart.com)
 [@chnspart](https://github.com/chnspart)  
 [LinkedIn](https://linkedin.com/in/chnspart)
 
@@ -57,6 +58,7 @@ To switch between different company configurations:
    ```bash
    NEXT_PUBLIC_THEME=default    # Default theme  
    NEXT_PUBLIC_THEME=companyA   # Company A specific theme
+   NEXT_PUBLIC_ENABLE_ANALYTICS=false   # Feature Flags
    ```
 
 2. The system will automatically apply the corresponding:
