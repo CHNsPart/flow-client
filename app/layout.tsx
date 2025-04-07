@@ -14,6 +14,8 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
+// console.log(activeSiteConfig)
+
 export const metadata: Metadata = {
   title: {
     default: activeSiteConfig.name,

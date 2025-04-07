@@ -32,7 +32,7 @@ export const defaultSiteConfig: SiteConfig = {
   name: "Flow Hub",
   description: "Loan Management System",
   url: "https://flowhub.example.com",
-  ogImage: "/images/og-image.jpg",
+  ogImage: "/brands/default/og-image.jpg",
   links: {
     github: "https://github.com/flowhub",
     linkedin: "https://linkedin.com/company/flowhub"
@@ -57,7 +57,11 @@ export const companySiteConfigs: Record<string, Partial<SiteConfig>> = {
     name: "Company A",
     description: "Loan Management System customized for Company A",
     url: "https://companya.flowhub.example.com",
-    ogImage: "/images/companyA-og-image.jpg",
+    ogImage: "/brands/companyA/companyA-og-image.jpg",
+    links: {
+      github: "https://github.com/flowhub",
+      linkedin: "https://linkedin.com/company/flowhub"
+    },
     company: {
       name: "Company A Inc.",
       logo: "/brands/companyA/companyA.svg",
@@ -73,7 +77,11 @@ export const companySiteConfigs: Record<string, Partial<SiteConfig>> = {
     name: "Company B",
     description: "Loan Management System customized for Company B",
     url: "https://companyb.flowhub.example.com",
-    ogImage: "/images/companyB-og-image.jpg",
+    ogImage: "/brands/companyB/companyB-og-image.jpg",
+    links: {
+      github: "https://github.com/flowhub",
+      linkedin: "https://linkedin.com/company/flowhub"
+    },
     company: {
       name: "Company B Inc.",
       logo: "/brands/companyB/companyB.svg",
