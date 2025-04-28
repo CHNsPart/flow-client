@@ -1,8 +1,11 @@
-import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
-import "./globals.css";
-import { ThemeProvider } from "@/providers/theme-provider";
-import { activeSiteConfig } from "@/config";
+// /app/[lang]/layout.tsx
+import { ReactNode } from 'react'
+import { defaultLocale, locales } from '@/lib/i18n/settings'
+import { activeSiteConfig } from '@/config'
+import type { Metadata } from 'next'
+import { I18nProvider } from "@/providers/i18n-provider" 
+import { ThemeProvider } from '@/providers/theme-provider'
+import { Geist, Geist_Mono } from "next/font/google"
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -14,6 +17,12 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
+// Generate static params for all supported languages
+export function generateStaticParams() {
+  return locales.map(lang => ({ lang }))
+}
+
+// Fixed metadata that doesn't depend on the dynamic route
 export const metadata: Metadata = {
   title: {
     default: activeSiteConfig.name,
@@ -36,7 +45,6 @@ export const metadata: Metadata = {
   creator: activeSiteConfig.company.name,
   openGraph: {
     type: "website",
-    locale: activeSiteConfig.defaultLocale,
     url: activeSiteConfig.url,
     title: activeSiteConfig.name,
     description: activeSiteConfig.description,
@@ -63,22 +71,22 @@ export const metadata: Metadata = {
     apple: activeSiteConfig.company.favicon,
   },
   manifest: `${activeSiteConfig.url}/site.webmanifest`,
-};
+}
 
-export default function RootLayout({
+export default function LangLayout({
   children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
+}: {
+  children: ReactNode
+}) {
+  // Use the locale from static context
+  // In Next.js 15, we don't access params.lang directly in the server component
   return (
-    <html lang={activeSiteConfig.defaultLocale} suppressHydrationWarning>
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
+    <I18nProvider locale={defaultLocale}>
+      <div className={`${geistSans.variable} ${geistMono.variable}`}>
         <ThemeProvider defaultTheme="system">
           {children}
         </ThemeProvider>
-      </body>
-    </html>
-  );
+      </div>
+    </I18nProvider>
+  )
 }

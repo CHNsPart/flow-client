@@ -1,0 +1,61 @@
+{
+  "common": {
+    "app": {
+      "name": "Flow Hub",
+      "tagline": "Sistema de Gestión de Préstamos",
+      "copyright": "© {{year}} Flow Hub. Todos los derechos reservados."
+    },
+    "navigation": {
+      "home": "Inicio",
+      "dashboard": "Panel de Control",
+      "settings": "Ajustes",
+      "profile": "Perfil",
+      "logout": "Cerrar Sesión"
+    },
+    "sidebar": {
+      "tenants": {
+        "title": "Gestión de Inquilinos",
+        "view": "Ver Inquilinos",
+        "add": "Agregar Inquilino",
+        "edit": "Editar Inquilino",
+        "delete": "Eliminar Inquilino"
+      },
+      "investor": {
+        "title": "Gestión de Inversores",
+        "view": "Ver Inversores",
+        "add": "Agregar Inversor",
+        "edit": "Editar Inversor",
+        "delete": "Eliminar Inversor"
+      },
+      "loan": {
+        "title": "Gestión de Préstamos",
+        "view": "Ver Todos los Préstamos",
+        "mortgage": "Préstamos Hipotecarios",
+        "auto": "Préstamos para Automóviles",
+        "personal": "Préstamos Personales"
+      },
+      "reporting": {
+        "title": "Informes",
+        "portfolio": "Resumen del Portafolio",
+        "revenue": "Informes de Ingresos",
+        "risk": "Análisis de Riesgo"
+      }
+    }
+  },
+  "flowConfig": {
+    "i18nDemo": {
+      "title": "Demostración de Internacionalización",
+      "textSectionTitle": "Traducciones de Texto",
+      "welcomeMessage": "Bienvenido al Sistema de Gestión de Préstamos Flow Hub",
+      "description": "Esta sección demuestra cómo funcionan las traducciones de texto en diferentes idiomas.",
+      "dateSectionTitle": "Formato de Fechas",
+      "currentDate": "Fecha de Hoy",
+      "longDate": "Formato Largo",
+      "shortDate": "Formato Corto",
+      "currencySectionTitle": "Formato de Números y Monedas",
+      "loanAmount": "Importe del Préstamo",
+      "interestRate": "Tasa de Interés",
+      "transactions": "Transacciones Totales"
+    }
+  }
+}

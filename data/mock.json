@@ -1,0 +1,99 @@
+{
+  "tenants-management": {
+    "name": "Tenants Management",
+    "description": "Manage your tenants and their details.",
+    "icon": "TiGroup",
+    "url": "/tenants-management",
+    "sub-menu": [
+      {
+        "name": "View Tenants",
+        "url": "/tenants-management/view",
+        "icon": "TiEye"
+      },
+      {
+        "name": "Add Tenant",
+        "url": "/tenants-management/add",
+        "icon": "TiPlus"
+      },
+      {
+        "name": "Edit Tenant",
+        "url": "/tenants-management/edit",
+        "icon": "TiEdit"
+      }
+    ]
+  },
+  "investor-management": {
+    "name": "Investor Management",
+    "description": "Manage your investors and their details.",
+    "icon": "TiBriefcase",
+    "url": "/investor-management",
+    "sub-menu": [
+      {
+        "name": "View Investors",
+        "url": "/investor-management/view",
+        "icon": "TiEye"
+      },
+      {
+        "name": "Add Investor",
+        "url": "/investor-management/add",
+        "icon": "TiPlus"
+      },
+      {
+        "name": "Edit Investor",
+        "url": "/investor-management/edit",
+        "icon": "TiEdit"
+      }
+    ]
+  },
+  "loan-management": {
+    "name": "Loan Management",
+    "description": "Manage different loan types and applications.",
+    "icon": "TiChartPie",
+    "url": "/loan-management",
+    "sub-menu": [
+      {
+        "name": "View All Loans",
+        "url": "/loan-management/view",
+        "icon": "TiEye"
+      },
+      {
+        "name": "Mortgage Loans",
+        "url": "/loan-management/mortgage",
+        "icon": "TiHome"
+      },
+      {
+        "name": "Auto Loans",
+        "url": "/loan-management/auto",
+        "icon": "TiCar"
+      },
+      {
+        "name": "Personal Loans",
+        "url": "/loan-management/personal",
+        "icon": "TiUser"
+      }
+    ]
+  },
+  "reporting": {
+    "name": "Reporting",
+    "description": "Generate and view reports.",
+    "icon": "TiChartBar",
+    "url": "/reporting",
+    "sub-menu": [
+      {
+        "name": "Portfolio Summary",
+        "url": "/reporting/portfolio",
+        "icon": "TiDocumentText"
+      },
+      {
+        "name": "Revenue Reports",
+        "url": "/reporting/revenue",
+        "icon": "TiChartLine"
+      },
+      {
+        "name": "Risk Analytics",
+        "url": "/reporting/risk",
+        "icon": "TiWarning"
+      }
+    ]
+  }
+}

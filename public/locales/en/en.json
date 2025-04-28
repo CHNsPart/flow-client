@@ -1,0 +1,61 @@
+{
+  "common": {
+    "app": {
+      "name": "Flow Hub",
+      "tagline": "Loan Management System",
+      "copyright": "© {{year}} Flow Hub. All rights reserved."
+    },
+    "navigation": {
+      "home": "Home",
+      "dashboard": "Dashboard",
+      "settings": "Settings",
+      "profile": "Profile",
+      "logout": "Logout"
+    },
+    "sidebar": {
+      "tenants": {
+        "title": "Tenants Management",
+        "view": "View Tenants",
+        "add": "Add Tenant",
+        "edit": "Edit Tenant",
+        "delete": "Delete Tenant"
+      },
+      "investor": {
+        "title": "Investor Management",
+        "view": "View Investors",
+        "add": "Add Investor",
+        "edit": "Edit Investor",
+        "delete": "Delete Investor"
+      },
+      "loan": {
+        "title": "Loan Management",
+        "view": "View All Loans",
+        "mortgage": "Mortgage Loans",
+        "auto": "Auto Loans",
+        "personal": "Personal Loans"
+      },
+      "reporting": {
+        "title": "Reporting",
+        "portfolio": "Portfolio Summary",
+        "revenue": "Revenue Reports",
+        "risk": "Risk Analytics"
+      }
+    }
+  },
+  "flowConfig": {
+    "i18nDemo": {
+      "title": "Internationalization Demo",
+      "textSectionTitle": "Text Translations",
+      "welcomeMessage": "Welcome to the Flow Hub Loan Management System",
+      "description": "This section demonstrates how text translations work across different languages.",
+      "dateSectionTitle": "Date Formatting",
+      "currentDate": "Today's Date",
+      "longDate": "Long Format",
+      "shortDate": "Short Format",
+      "currencySectionTitle": "Number & Currency Formatting",
+      "loanAmount": "Loan Amount",
+      "interestRate": "Interest Rate",
+      "transactions": "Total Transactions"
+    }
+  }
+}
