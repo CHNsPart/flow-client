@@ -82,7 +82,7 @@ export function LanguageSwitcher() {
       <Button
         variant="outline"
         size="sm"
-        className="flex items-center gap-2 hover:text-primary dark:hover:bg-primary/10 hover:bg-primary/20"
+        className="flex items-center gap-2 hover:text-foreground dark:hover:bg-primary/10 hover:bg-primary/10"
         onClick={() => setIsOpen(!isOpen)}
       >
         <span>{currentLanguage.flag}</span>
@@ -96,7 +96,7 @@ export function LanguageSwitcher() {
               key={code}
               variant={code === currentLang ? "secondary" : "ghost"}
               size="sm"
-              className="w-full justify-start mb-1 dark:hover:bg-primary/10 hover:bg-primary/10 cursor-pointer"
+              className="w-full justify-start mb-1 hover:text-foreground dark:hover:bg-primary/10 hover:bg-primary/10 cursor-pointer"
               onClick={() => changeLanguage(code)}
               disabled={code === currentLang}
             >

@@ -13,32 +13,29 @@
       "logout": "Cerrar Sesión"
     },
     "sidebar": {
+      "dashboard": {
+        "title": "Panel de Control"
+      },
       "tenants": {
         "title": "Gestión de Inquilinos",
-        "view": "Ver Inquilinos",
-        "add": "Agregar Inquilino",
-        "edit": "Editar Inquilino",
-        "delete": "Eliminar Inquilino"
+        "view-tenants": "Ver Inquilinos",
+        "add-tenant": "Agregar Inquilino"
       },
       "investor": {
         "title": "Gestión de Inversores",
-        "view": "Ver Inversores",
-        "add": "Agregar Inversor",
-        "edit": "Editar Inversor",
-        "delete": "Eliminar Inversor"
+        "view-investors": "Ver Inversores",
+        "add-investor": "Agregar Inversor"
       },
       "loan": {
         "title": "Gestión de Préstamos",
-        "view": "Ver Todos los Préstamos",
-        "mortgage": "Préstamos Hipotecarios",
-        "auto": "Préstamos para Automóviles",
-        "personal": "Préstamos Personales"
+        "view-all-loans": "Ver Todos los Préstamos",
+        "mortgage-loans": "Préstamos Hipotecarios",
+        "auto-loans": "Préstamos para Automóviles",
+        "personal-loans": "Préstamos Personales",
+        "coming-soon": "Próximamente"
       },
       "reporting": {
-        "title": "Informes",
-        "portfolio": "Resumen del Portafolio",
-        "revenue": "Informes de Ingresos",
-        "risk": "Análisis de Riesgo"
+        "title": "Informes"
       }
     }
   },

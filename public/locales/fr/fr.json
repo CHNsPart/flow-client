@@ -13,32 +13,29 @@
       "logout": "Déconnexion"
     },
     "sidebar": {
+      "dashboard": {
+        "title": "Tableau de Bord"
+      },
       "tenants": {
         "title": "Gestion des Locataires",
-        "view": "Voir les Locataires",
-        "add": "Ajouter un Locataire",
-        "edit": "Modifier un Locataire",
-        "delete": "Supprimer un Locataire"
+        "view-tenants": "Voir les Locataires",
+        "add-tenant": "Ajouter un Locataire"
       },
       "investor": {
         "title": "Gestion des Investisseurs",
-        "view": "Voir les Investisseurs",
-        "add": "Ajouter un Investisseur",
-        "edit": "Modifier un Investisseur",
-        "delete": "Supprimer un Investisseur"
+        "view-investors": "Voir les Investisseurs",
+        "add-investor": "Ajouter un Investisseur"
       },
       "loan": {
         "title": "Gestion des Prêts",
-        "view": "Voir Tous les Prêts",
-        "mortgage": "Prêts Hypothécaires",
-        "auto": "Prêts Automobiles",
-        "personal": "Prêts Personnels"
+        "view-all-loans": "Voir Tous les Prêts",
+        "mortgage-loans": "Prêts Hypothécaires",
+        "auto-loans": "Prêts Automobiles",
+        "personal-loans": "Prêts Personnels",
+        "coming-soon": "Bientôt Disponible"
       },
       "reporting": {
-        "title": "Rapports",
-        "portfolio": "Résumé du Portefeuille",
-        "revenue": "Rapports de Revenus",
-        "risk": "Analyses de Risque"
+        "title": "Rapports"
       }
     }
   },

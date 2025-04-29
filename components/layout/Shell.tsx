@@ -1,7 +1,8 @@
+// /components/layout/Shell.tsx (Update import only)
 'use client';
 
 import { ReactNode, useState, useEffect } from 'react';
-import { Sidebar } from './Sidebar';
+import { Sidebar } from './sidebar/index';
 import { useTranslationHelper } from '@/hooks/use-translation-helper';
 import { Button } from '@/components/ui/button';
 import { TiAdjustBrightness, TiAdjustContrast } from 'react-icons/ti';
@@ -40,7 +41,7 @@ export function Shell({ children }: ShellProps) {
               <Button 
                 variant="ghost" 
                 size="icon"
-                className="hover:text-primary dark:hover:bg-primary/10 hover:bg-primary/10"
+                className="dark:hover:text-foreground dark:hover:bg-primary/10 hover:bg-primary/10"
                 onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
                 aria-label="Toggle theme"
                 title={theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}

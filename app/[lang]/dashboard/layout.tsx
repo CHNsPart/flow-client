@@ -1,19 +1,13 @@
+// File: app/[lang]/dashboard/layout.tsx
 'use client'
 
 import { ReactNode } from 'react'
-import { ClientLayout } from '@/components/layout/ClientLayout'
-import { Shell } from '@/components/layout/Shell'
 
 export default function DashboardLayout({
   children,
 }: {
   children: ReactNode
 }) {
-  return (
-    <ClientLayout>
-      <Shell>
-        {children}
-      </Shell>
-    </ClientLayout>
-  )
+  // No need for Shell or ClientLayout here as they're now in the parent layout
+  return <>{children}</>;
 }

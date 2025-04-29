@@ -14,10 +14,10 @@ export default function TenantsManagementPage() {
       
       <Card>
         <CardHeader>
-          <CardTitle>Tenants Overview</CardTitle>
+          <CardTitle>Tenants Add</CardTitle>
         </CardHeader>
         <CardContent>
-          <p>This is a placeholder for the Tenants Management page.</p>
+          <p>This is a placeholder for the Tenants Add page.</p>
         </CardContent>
       </Card>
     </div>

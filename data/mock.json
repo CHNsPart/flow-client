@@ -1,99 +1,80 @@
 {
+  "dashboard": {
+    "name": "Dashboard",
+    "description": "Overview of your system's performance and statistics.",
+    "icon": "BsFillHouseFill",
+    "url": "/dashboard"
+  },
   "tenants-management": {
     "name": "Tenants Management",
     "description": "Manage your tenants and their details.",
-    "icon": "TiGroup",
-    "url": "/tenants-management",
+    "icon": "BsPeopleFill",
     "sub-menu": [
       {
         "name": "View Tenants",
         "url": "/tenants-management/view",
-        "icon": "TiEye"
+        "icon": "BsEyeFill"
       },
       {
         "name": "Add Tenant",
         "url": "/tenants-management/add",
-        "icon": "TiPlus"
-      },
-      {
-        "name": "Edit Tenant",
-        "url": "/tenants-management/edit",
-        "icon": "TiEdit"
+        "icon": "BsPlusCircleFill"
       }
     ]
   },
   "investor-management": {
     "name": "Investor Management",
     "description": "Manage your investors and their details.",
-    "icon": "TiBriefcase",
-    "url": "/investor-management",
+    "icon": "BsBriefcaseFill",
     "sub-menu": [
       {
         "name": "View Investors",
         "url": "/investor-management/view",
-        "icon": "TiEye"
+        "icon": "BsEyeFill"
       },
       {
         "name": "Add Investor",
         "url": "/investor-management/add",
-        "icon": "TiPlus"
-      },
-      {
-        "name": "Edit Investor",
-        "url": "/investor-management/edit",
-        "icon": "TiEdit"
+        "icon": "BsPlusCircleFill"
       }
     ]
   },
   "loan-management": {
     "name": "Loan Management",
     "description": "Manage different loan types and applications.",
-    "icon": "TiChartPie",
-    "url": "/loan-management",
+    "icon": "BsPieChartFill",
     "sub-menu": [
       {
         "name": "View All Loans",
         "url": "/loan-management/view",
-        "icon": "TiEye"
+        "icon": "BsEyeFill"
       },
       {
         "name": "Mortgage Loans",
         "url": "/loan-management/mortgage",
-        "icon": "TiHome"
+        "icon": "BsHouseFill"
       },
       {
         "name": "Auto Loans",
         "url": "/loan-management/auto",
-        "icon": "TiCar"
+        "icon": "BsCarFrontFill"
       },
       {
         "name": "Personal Loans",
         "url": "/loan-management/personal",
-        "icon": "TiUser"
+        "icon": "BsPersonFill"
+      },
+      {
+        "name": "Coming Soon",
+        "url": "#",
+        "icon": "BsClockFill"
       }
     ]
   },
   "reporting": {
     "name": "Reporting",
     "description": "Generate and view reports.",
-    "icon": "TiChartBar",
-    "url": "/reporting",
-    "sub-menu": [
-      {
-        "name": "Portfolio Summary",
-        "url": "/reporting/portfolio",
-        "icon": "TiDocumentText"
-      },
-      {
-        "name": "Revenue Reports",
-        "url": "/reporting/revenue",
-        "icon": "TiChartLine"
-      },
-      {
-        "name": "Risk Analytics",
-        "url": "/reporting/risk",
-        "icon": "TiWarning"
-      }
-    ]
+    "icon": "BsBarChartFill",
+    "url": "/reporting"
   }
 }

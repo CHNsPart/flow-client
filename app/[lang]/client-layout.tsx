@@ -1,4 +1,4 @@
-// /app/[lang]/client-layout.tsx
+// File: app/[lang]/client-layout.tsx
 'use client'
 
 import { ReactNode, useEffect } from 'react'

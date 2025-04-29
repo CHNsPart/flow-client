@@ -1,4 +1,4 @@
-// /app/[lang]/layout.tsx
+// File: app/[lang]/layout.tsx
 import { ReactNode } from 'react'
 import { defaultLocale, locales } from '@/lib/i18n/settings'
 import { activeSiteConfig } from '@/config'
@@ -6,6 +6,8 @@ import type { Metadata } from 'next'
 import { I18nProvider } from "@/providers/i18n-provider" 
 import { ThemeProvider } from '@/providers/theme-provider'
 import { Geist, Geist_Mono } from "next/font/google"
+import ClientLayout from './client-layout'
+import { Shell } from '@/components/layout/Shell'
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -78,13 +80,15 @@ export default function LangLayout({
 }: {
   children: ReactNode
 }) {
-  // Use the locale from static context
-  // In Next.js 15, we don't access params.lang directly in the server component
   return (
     <I18nProvider locale={defaultLocale}>
       <div className={`${geistSans.variable} ${geistMono.variable}`}>
         <ThemeProvider defaultTheme="system">
-          {children}
+          <ClientLayout>
+            <Shell>
+              {children}
+            </Shell>
+          </ClientLayout>
         </ThemeProvider>
       </div>
     </I18nProvider>
