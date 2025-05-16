@@ -4,7 +4,6 @@ import { cn } from '@/lib/utils';
 import { BsChevronDown, BsChevronRight } from 'react-icons/bs';
 import { DynamicIcon } from './DynamicIcon';
 import { SidebarMenuItemProps } from './types';
-import { useRouter } from 'next/navigation';
 
 /**
  * Individual menu item component for the sidebar
@@ -20,8 +19,8 @@ export const SidebarMenuItem = memo(function SidebarMenuItem({
   toggleMenu,
   getLocalizedUrl,
   translatedName,
+  isCollapsed,
 }: SidebarMenuItemProps) {
-  const router = useRouter();
   const directUrl = item.url || '';
 
   // Handle click on menu item
@@ -30,56 +29,47 @@ export const SidebarMenuItem = memo(function SidebarMenuItem({
       // If it has submenu, toggle the menu
       toggleMenu(menuKey, e);
     } else if (directUrl && directUrl !== '#') {
-      // If it has a direct URL and no submenu, navigate to the URL
-      e.preventDefault();
-      const targetUrl = getLocalizedUrl(directUrl);
-      router.push(targetUrl);
+      // If it has a direct URL, navigate to it
+      window.location.href = getLocalizedUrl(directUrl);
     }
   };
 
   return (
-    <div className="group relative">
-      <div 
-        className={cn(
-          "flex items-center justify-between p-2 rounded-md cursor-pointer",
-          (isActive || hasActiveChild) 
-            ? "bg-primary text-primary-foreground font-medium" 
-            : "text-gray-500 hover:bg-gray-100 hover:text-gray-900 dark:hover:bg-gray-500/20 dark:hover:text-gray-200"
-        )}
-        onClick={handleClick}
-        title={item.description}
-        role="button"
-        tabIndex={0}
-        aria-expanded={hasSubmenu ? isOpen : undefined}
-        aria-haspopup={hasSubmenu ? "true" : undefined}
-        onKeyDown={(e) => {
-          if (e.key === 'Enter' || e.key === ' ') {
-            handleClick(e as unknown as React.MouseEvent);
-          }
-        }}
-      >
-        <div className="flex items-center gap-2">
-          <span className={cn(
-            "text-gray-500",
-            (isActive || hasActiveChild) && "text-primary-foreground"
-          )}>
-            <DynamicIcon iconName={item.icon} />
-          </span>
-          <span className="text-sm">{translatedName}</span>
-        </div>
-        {hasSubmenu && (
-          <span className={cn(
-            "text-gray-400",
-            (isActive || hasActiveChild) && "text-primary-foreground"
-          )}>
-            {isOpen ? (
-              <BsChevronDown className="size-4" />
-            ) : (
-              <BsChevronRight className="size-4" />
-            )}
-          </span>
-        )}
+    <div 
+      className={cn(
+        "flex w-full items-center justify-between rounded-md p-2 cursor-pointer",
+        "hover:bg-primary/10 dark:hover:bg-primary/30",
+        "text-left text-sm outline-hidden transition-all",
+        "disabled:pointer-events-none disabled:opacity-50",
+        (isActive || hasActiveChild) 
+        && "bg-primary hover:bg-primary dark:hover:bg-primary hover:text-primary-foreground text-primary-foreground font-medium" 
+      )}
+      onClick={handleClick}
+      title={isCollapsed ? translatedName : item.description}
+    >
+      <div className="flex items-center gap-3 w-full">
+        <span className={cn(
+          "text-sidebar-foreground shrink-0",
+          (isActive || hasActiveChild) && "text-primary-foreground",
+        )}>
+          <DynamicIcon iconName={item.icon} className={isCollapsed ? "flex justify-center items-center size-4" : ""} />
+        </span>
+        <span className={cn("text-sm truncate", isCollapsed && "text-content")}>
+          {translatedName}
+        </span>
       </div>
+      {!isCollapsed && hasSubmenu && (
+        <span className={cn(
+          "text-sidebar-foreground transition-transform duration-200 ml-auto shrink-0",
+          (isActive || hasActiveChild) && "text-primary-foreground"
+        )}>
+          {isOpen ? (
+            <BsChevronDown className="size-4" />
+          ) : (
+            <BsChevronRight className="size-4" />
+          )}
+        </span>
+      )}
     </div>
   );
 });

@@ -2,16 +2,20 @@
 'use client';
 
 import { useState, useRef, useEffect } from 'react';
-import Image from 'next/image';
 import Link from 'next/link';
-import { cn } from '@/lib/utils';
-import { BsPerson, BsBoxArrowRight, BsChevronRight, BsInfoCircle } from 'react-icons/bs';
+import { BsPerson, BsBoxArrowRight, BsInfoCircle } from 'react-icons/bs';
 import { SidebarFooterProps } from './types';
+import { 
+  Collapsible, 
+  CollapsibleContent, 
+  CollapsibleTrigger 
+} from '@/components/ui/collapsible';
+import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 
 /**
  * Footer component for the sidebar with user profile and logout
  */
-export function SidebarFooter({ user, t }: SidebarFooterProps) {
+export function SidebarFooter({ user, t, isCollapsed }: SidebarFooterProps) {
   const [userMenuOpen, setUserMenuOpen] = useState(false);
   const userMenuRef = useRef<HTMLDivElement>(null);
 
@@ -32,53 +36,33 @@ export function SidebarFooter({ user, t }: SidebarFooterProps) {
   // Get current year for copyright text
   const currentYear = new Date().getFullYear();
 
+  if (isCollapsed) {
+    return (
+      <div className="py-4 flex flex-col items-center">
+        <Avatar className="size-8 rounded-full">
+          <AvatarImage src={user.avatar} alt={user.name} className="object-cover" />
+          <AvatarFallback>{user.name.charAt(0)}</AvatarFallback>
+        </Avatar>
+      </div>
+    );
+  }
+
   return (
-    <>
-      {/* User Profile Section */}
-      <div className="mt-auto border-t">
-        <div className="p-2 relative" ref={userMenuRef}>
-          {/* User Profile Button */}
-          <button 
-            className="flex items-center gap-3 w-full px-2 py-2 rounded-md hover:bg-gray-100 dark:hover:bg-gray-800 text-left"
-            onClick={() => setUserMenuOpen(!userMenuOpen)}
-            aria-expanded={userMenuOpen}
-            aria-haspopup="true"
-          >
-            <div className="relative">
-              <div className="size-9 rounded-md overflow-hidden bg-gray-100 dark:bg-gray-800">
-                <Image 
-                  src={user.avatar} 
-                  alt={user.name}
-                  width={40}
-                  height={40}
-                  className="object-cover size-full rounded-md"
-                />
-              </div>
-            </div>
-            <div className="flex-1 min-w-0">
-              <div className="font-medium text-sm truncate dark:text-white">{user.name}</div>
-              <div className="text-xs text-muted-foreground truncate">{user.email}</div>
-            </div>
-            <div className="flex-shrink-0 text-gray-400">
-              <BsChevronRight className={cn("size-4 transition-transform", 
-                userMenuOpen ? "rotate-90" : ""
-              )} />
-            </div>
-          </button>
-          
-          {/* User Dropdown Menu */}
-          {userMenuOpen && (
-            <div className="absolute bottom-full mb-1 left-2 right-2 bg-white dark:bg-gray-900 rounded-md shadow-lg border overflow-hidden z-10">
+    <div ref={userMenuRef} className="p-2">
+      <div className="relative">
+        <Collapsible open={userMenuOpen} onOpenChange={setUserMenuOpen}>
+          <CollapsibleContent className="pb-2 pt-1">
+            <div className="rounded-md bg-background shadow-sm border overflow-hidden">
               <div className="py-1">
                 <Link 
                   href="/account" 
-                  className="flex items-center px-4 py-2 text-sm"
+                  className="flex items-center px-4 py-2 text-sm hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
                 >
                   <BsPerson className="size-4 mr-2 text-muted-foreground" />
                   Account
                 </Link>
                 <button 
-                  className="flex items-center w-full text-left px-4 py-2 text-sm"
+                  className="flex items-center w-full text-left px-4 py-2 text-sm hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
                   onClick={() => console.log('Log out clicked')}
                 >
                   <BsBoxArrowRight className="size-4 mr-2 text-muted-foreground" />
@@ -86,17 +70,44 @@ export function SidebarFooter({ user, t }: SidebarFooterProps) {
                 </button>
               </div>
             </div>
-          )}
-        </div>
+          </CollapsibleContent>
+          <CollapsibleTrigger asChild>
+            <div 
+              className="flex items-center cursor-pointer justify-between w-full px-3 py-2.5 rounded-md 
+              transition-colors duration-200 ease-in-out
+              bg-sidebar-accent/5 hover:bg-primary-accent/20 
+              dark:bg-primary-accent/10 dark:hover:bg-primary-accent/30
+              border border-primary-border/40 hover:border-primary-border"
+            >
+              <div className="flex items-center gap-3">
+                <Avatar className="size-10 ring-2 ring-sidebar-primary/10 object-contain">
+                  <AvatarImage src={user.avatar} alt={user.name} />
+                  <AvatarFallback className="bg-sidebar-primary/10 text-sidebar-primary font-medium">
+                    {user.name.charAt(0)}
+                  </AvatarFallback>
+                </Avatar>
+                <div className="flex-1 min-w-0 text-left">
+                  <div className="font-medium text-sm truncate text-sidebar-foreground">{user.name}</div>
+                  <div className="text-xs text-sidebar-foreground/60 truncate">{user.email}</div>
+                </div>
+              </div>
+              <div className="text-sidebar-foreground/40 hover:text-sidebar-foreground">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="ml-1">
+                  <path d="m6 9 6 6 6-6"/>
+                </svg>
+              </div>
+            </div>
+          </CollapsibleTrigger>
+        </Collapsible>
       </div>
       
       {/* Footer with copyright */}
-      <footer className="px-4 py-2.5 border-t">
+      <div className="mt-3 pt-3 border-t border-border">
         <div className="flex items-center text-xs text-muted-foreground/50">
-          <BsInfoCircle className="size-3.5 mr-2 text-gray-400" />
+          <BsInfoCircle className="size-3.5 mr-2" />
           <span>{t('common.app.copyright').replace('{{year}}', currentYear.toString())}</span>
         </div>
-      </footer>
-    </>
+      </div>
+    </div>
   );
 }

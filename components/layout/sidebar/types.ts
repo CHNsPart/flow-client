@@ -10,19 +10,13 @@ export interface DynamicIconProps {
 }
 
 /**
- * Props for the main Sidebar component
- */
-export interface SidebarProps {
-  className?: string;
-}
-
-/**
  * Props for the SidebarHeader component
  */
 export interface SidebarHeaderProps {
   companyName: string;
   companyLogo?: string;
   appTagline: string;
+  isCollapsed?: boolean;
 }
 
 /**
@@ -37,6 +31,7 @@ export interface SidebarContentProps {
   getMenuTranslation: (key: string, subKey?: string) => string;
   getLocalizedUrl: (url: string) => string;
   t: (key: string) => string;
+  isCollapsed?: boolean;
 }
 
 /**
@@ -49,9 +44,10 @@ export interface SidebarMenuItemProps {
   hasActiveChild: boolean;
   isOpen: boolean;
   hasSubmenu: boolean;
-  toggleMenu: (key: string, e: React.MouseEvent) => void;
+  toggleMenu: (key: string, e?: React.MouseEvent) => void;
   getLocalizedUrl: (url: string) => string;
   translatedName: string;
+  isCollapsed?: boolean;
 }
 
 /**
@@ -65,6 +61,7 @@ export interface SidebarSubmenuProps {
   getMenuTranslation: (key: string, subKey?: string) => string;
   getLocalizedUrl: (url: string) => string;
   t: (key: string) => string;
+  isCollapsed?: boolean;
 }
 
 /**
@@ -77,13 +74,7 @@ export interface SidebarFooterProps {
     avatar: string;
   };
   t: (key: string) => string;
-}
-
-/**
- * Props for the SidebarSkeleton component
- */
-export interface SidebarSkeletonProps {
-  className?: string;
+  isCollapsed?: boolean;
 }
 
 /**

@@ -11,9 +11,9 @@ export const companyBTheme: ThemeConfig = {
     light: {
       ...defaultTheme.colors.light,
       primary: "oklch(0.7 0.18 60)", // Light shaded orange
-      primaryForeground: "oklch(0.1 0 0)", // Dark text for contrast on light orange
-      accent: "oklch(0.65 0.16 70)", // Slightly deeper orange accent
-      accentForeground: "oklch(0.1 0 0)", // Near black
+      primaryForeground: "oklch(0.98 0 0)", // Dark text for contrast on light orange
+      accent: "oklch(0.72 0.16 70)", // Slightly deeper orange accent
+      accentForeground: "oklch(0.98 0 0)", // Near black
       sidebarPrimary: "oklch(0.7 0.18 60)", // Match primary
       chart1: "oklch(0.7 0.18 60)", // Light orange (primary)
       chart2: "oklch(0.65 0.2 55)", // Slightly deeper orange
