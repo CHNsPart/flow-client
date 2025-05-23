@@ -1,31 +1,51 @@
-// /providers/LangParamProvider.tsx
-'use client'
+// Path: providers/LangParamProvider.tsx
+'use client';
 
 import { createContext, useContext, ReactNode } from 'react'
 import { isValidLocale, defaultLocale } from '@/lib/i18n/settings'
 
-// Create a context for the language
-const LangContext = createContext<string>(defaultLocale)
+// Context type with clientId
+type LangContextType = {
+  lang: string;
+  clientId: string;
+};
+
+// Create context with default values
+const LangContext = createContext<LangContextType>({
+  lang: defaultLocale,
+  clientId: 'default'
+});
 
 // Context provider component
 export function LangParamProvider({ 
   children, 
-  lang 
+  lang,
+  clientId = 'default'
 }: { 
   children: ReactNode, 
-  lang: string 
+  lang: string,
+  clientId?: string 
 }) {
-  // Validate the language
-  const validLang = isValidLocale(lang) ? lang : defaultLocale
+  // Validate the language and client
+  const validLang = isValidLocale(lang) ? lang : defaultLocale;
   
   return (
-    <LangContext.Provider value={validLang}>
+    <LangContext.Provider value={{
+      lang: validLang,
+      clientId
+    }}>
       {children}
     </LangContext.Provider>
-  )
+  );
 }
 
-// Hook to use the language
+// Hook to use lang context
 export function useLangParam() {
-  return useContext(LangContext)
+  const { lang } = useContext(LangContext);
+  return lang;
+}
+
+// Hook to get both lang and client
+export function useLangAndClient() {
+  return useContext(LangContext);
 }

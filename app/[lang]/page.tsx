@@ -1,17 +1,24 @@
+// Path: app/[lang]/page.tsx
 'use client';
 
+import { useParams } from 'next/navigation';
 import { useEffect } from 'react';
-import { useRouter } from 'next/navigation';
 
 export default function LangHomePage() {
-  const router = useRouter();
+  const params = useParams<{ lang: string }>();
   
   useEffect(() => {
-    // Redirect to dashboard without relying on useLangParam
-    const lang = window.location.pathname.split('/')[1] || 'en';
-    router.replace(`/${lang}/dashboard`);
-  }, [router]);
+    // Extract lang with proper null check for NextJS 15
+    const lang = params?.lang || 'en';
+    
+    // Get theme from environment variable or default
+    const envThemeClient = process.env.NEXT_PUBLIC_THEME || 'default';
+    
+    // Redirect to the dashboard with the theme client
+    window.location.href = `/${lang}/${envThemeClient}/dashboard`;
+  }, [params]);
   
+  // Render a loading state
   return (
     <div className="flex justify-center items-center h-screen">
       <p>Redirecting to dashboard...</p>

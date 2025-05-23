@@ -2,7 +2,6 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { getThemeInfo } from '@/lib/theme-utils';
 import { useTranslationHelper } from '@/hooks/use-translation-helper';
 import { BsInfoCircle } from 'react-icons/bs';
 import { useSidebarData } from './hooks/useSidebarData';
@@ -29,7 +28,6 @@ import { SidebarError } from './SidebarError';
  */
 export function Sidebar() {
   const { t } = useTranslationHelper();
-  const themeInfo = getThemeInfo();
   const [mounted, setMounted] = useState(false);
   
   // Get sidebar state from shadcn/ui sidebar
@@ -80,8 +78,6 @@ export function Sidebar() {
     );
   }
 
-  // During initial server render, use a simplified structure without translations
-  // This prevents hydration errors when translations differ between server and client
   if (!mounted) {
     return (
       <aside className="h-screen w-60 bg-sidebar text-sidebar-foreground border-r border-sidebar-border flex flex-col">
@@ -106,7 +102,6 @@ export function Sidebar() {
     );
   }
 
-  // Render sidebar with shadcn/ui components
   return (
     <ShadcnSidebar 
       className="bg-sidebar text-sidebar-foreground border-r border-border h-full"
@@ -114,9 +109,6 @@ export function Sidebar() {
     >
       <ShadcnSidebarHeader>
         <SidebarHeader
-          companyName={themeInfo.company || t('common.app.name')}
-          companyLogo={themeInfo.siteConfig?.company?.logo}
-          appTagline={t('common.app.tagline')}
           isCollapsed={isCollapsed}
         />
       </ShadcnSidebarHeader>
@@ -150,5 +142,4 @@ export function Sidebar() {
   );
 }
 
-// Export the SidebarTrigger for use in the Shell component
 export { SidebarTrigger };

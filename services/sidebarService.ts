@@ -9,7 +9,7 @@ import mockData from '@/data/mock.json';
  * This service allows for a seamless transition from development (mock data)
  * to production (actual API) based on configuration
  */
-export async function fetchSidebarData(): Promise<SidebarData> {
+export async function fetchSidebarData(clientId: string = 'default'): Promise<SidebarData> {
   // In production, we would fetch from an API endpoint
   const isProduction = process.env.NODE_ENV === 'production';
   const apiBaseUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
@@ -17,7 +17,7 @@ export async function fetchSidebarData(): Promise<SidebarData> {
   // Use real API in production if configured
   if (isProduction && apiBaseUrl) {
     try {
-      const response = await fetch(`${apiBaseUrl}/api/sidebar-data`);
+      const response = await fetch(`${apiBaseUrl}/api/sidebar-data?client=${clientId}`);
       if (!response.ok) {
         throw new Error(`API error: ${response.status}`);
       }
@@ -81,14 +81,14 @@ export async function fetchSidebarData(): Promise<SidebarData> {
  * Get menu permissions for the current user
  * This would integrate with your authentication system
  */
-export async function getMenuPermissions(): Promise<Record<string, boolean>> {
+export async function getMenuPermissions(clientId: string = 'default'): Promise<Record<string, boolean>> {
   const isProduction = process.env.NODE_ENV === 'production';
   const apiBaseUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
   
   // In production, fetch permissions from API based on authenticated user
   if (isProduction && apiBaseUrl) {
     try {
-      const response = await fetch(`${apiBaseUrl}/api/user-permissions`);
+      const response = await fetch(`${apiBaseUrl}/api/user-permissions?client=${clientId}`);
       if (!response.ok) {
         throw new Error(`API error: ${response.status}`);
       }

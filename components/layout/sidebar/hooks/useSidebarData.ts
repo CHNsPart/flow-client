@@ -1,19 +1,18 @@
-// File: components/layout/sidebar/hooks/useSidebarData.ts
+// Path: components/layout/sidebar/hooks/useSidebarData.ts
 'use client';
 
 import { useState, useEffect, useMemo } from 'react';
-import { usePathname } from 'next/navigation';
+import { usePathname, useParams } from 'next/navigation';
 import { SidebarData, MenuItem } from '@/types/sidebar';
 import { fetchSidebarData, getMenuPermissions } from '@/services/sidebarService';
 import { useLangParam } from '@/providers/LangParamProvider';
+import { validClients } from '@/config';
 
-/**
- * Custom hook for fetching and managing sidebar data
- * @returns Sidebar data, state, and helper functions
- */
 export function useSidebarData() {
   const pathname = usePathname();
   const lang = useLangParam();
+  const params = useParams<{ client: string }>();
+  const client = params?.client || 'default';
   
   const [sidebarData, setSidebarData] = useState<SidebarData | null>(null);
   const [permissions, setPermissions] = useState<Record<string, boolean>>({});
@@ -39,9 +38,10 @@ export function useSidebarData() {
         setError(null);
         
         // Fetch sidebar data and permissions in parallel
+        // Pass client ID to fetch company-specific sidebar data
         const [data, userPermissions] = await Promise.all([
-          fetchSidebarData(),
-          getMenuPermissions()
+          fetchSidebarData(client),
+          getMenuPermissions(client)
         ]);
         
         // Only update state if component is still mounted
@@ -93,7 +93,7 @@ export function useSidebarData() {
       isMounted = false;
     };
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [locales, pathname]);
+  }, [locales, pathname, client]); // Add client as dependency
 
   // Toggle submenu expansion
   const toggleMenu = (key: string, e?: React.MouseEvent) => {
@@ -113,8 +113,8 @@ export function useSidebarData() {
     if (!currentPath || menuUrl === '#') return false;
     
     // Handle exact path and parent path matches
-    const normalizedCurrentPath = normalizePath(currentPath, locales);
-    const normalizedMenuUrl = normalizePath(menuUrl, locales);
+    const normalizedCurrentPath = normalizePath(currentPath, locales, client);
+    const normalizedMenuUrl = normalizePath(menuUrl, locales, client);
     
     // Check for exact match or if the current path starts with the menu URL
     // For the dashboard or root URL, only match exactly to avoid matching all pages
@@ -126,14 +126,38 @@ export function useSidebarData() {
            normalizedCurrentPath.startsWith(`${normalizedMenuUrl}/`);
   };
 
-  // Helper function to normalize paths
-  const normalizePath = (path: string, locales: string[]): string => {
+  // Helper function to normalize paths, accounting for client segment
+  const normalizePath = (path: string, locales: string[], client: string): string => {
     let result = path.replace(/\/+$/, ''); // Remove trailing slashes
     
-    // Remove language prefix
+    // Remove language prefix and client prefix if present
     for (const locale of locales) {
+      // Check for /en/client/ pattern (regular path)
+      if (result.startsWith(`/${locale}/${client}/`)) {
+        result = result.substring(locale.length + client.length + 3);
+        break;
+      }
+      // Check for /en/client end pattern (root of client)
+      if (result === `/${locale}/${client}`) {
+        result = '/';
+        break;
+      }
+      
+      // Handle other cases where the client might be different
+      const segments = result.split('/').filter(Boolean);
+      if (segments.length >= 2 && segments[0] === locale && validClients.includes(segments[1])) {
+        // Has language and some client - extract the path after client
+        if (segments.length > 2) {
+          result = '/' + segments.slice(2).join('/'); 
+        } else {
+          result = '/';
+        }
+        break;
+      }
+      
+      // Legacy pattern /en/ without client
       if (result.startsWith(`/${locale}/`)) {
-        result = result.substring(locale.length + 2);
+        result = result.substring(locale.length + 1);
         break;
       }
       if (result === `/${locale}`) {
@@ -154,7 +178,7 @@ export function useSidebarData() {
   const isActive = useMemo(() => (url: string): boolean => {
     return isActiveUrl(pathname || '', url);
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [pathname]);
+  }, [pathname, client]); // Add client as dependency
 
   const getMenuTranslation = useMemo(() => (key: string, subKey?: string): string => {
     // Extract main category from the key (e.g., "tenants-management" -> "tenants")
@@ -169,16 +193,54 @@ export function useSidebarData() {
     return `common.sidebar.${mainCategory}.title`;
   }, []);
 
-  const getLocalizedUrl = useMemo(() => (url: string): string => {
-    // Don't process hash links
-    if (!url || url === '#') return url;
+const getLocalizedUrl = useMemo(() => (url: string): string => {
+  // Don't process hash links
+  if (!url || url === '#') return url;
+  
+  // Get the theme client from environment variable if set
+  const envThemeClient = process.env.NEXT_PUBLIC_THEME;
+  // Use environment theme if set, otherwise use client from URL
+  const effectiveClient = envThemeClient || client;
+  
+  // Parse the URL to get components
+  let pagePath = url;
+  const urlSegments = url.split('/').filter(Boolean);
+  
+  // Check if URL already has language prefix
+  if (urlSegments.length > 0 && locales.includes(urlSegments[0])) {
+    const urlLang = urlSegments[0];
     
-    // Check if URL already has language prefix
-    const hasLangPrefix = locales.some(locale => url.startsWith(`/${locale}/`));
-    
-    // Add language prefix if needed
-    return hasLangPrefix ? url : `/${lang}${url.startsWith('/') ? url : `/${url}`}`;
-  }, [locales, lang]);
+    // Check if URL already has client segment
+    if (urlSegments.length > 1) {
+      const urlClient = urlSegments[1];
+      
+      if (validClients.includes(urlClient)) {
+        // URL already has a client, ensure it's the effective client
+        if (urlClient !== effectiveClient) {
+          // Replace the client with the effective client
+          const remainingPath = urlSegments.slice(2).join('/');
+          return `/${urlLang}/${effectiveClient}${remainingPath ? `/${remainingPath}` : ''}`;
+        }
+        // Client already matches, return original URL
+        return url;
+      } else {
+        // URL has language but no valid client, insert effective client
+        const remainingPath = urlSegments.slice(1).join('/');
+        return `/${urlLang}/${effectiveClient}/${remainingPath}`;
+      }
+    } else {
+      // URL only has language, add client
+      return `/${urlLang}/${effectiveClient}`;
+    }
+  }
+  
+  // URL doesn't have language, add language and client
+  if (!pagePath.startsWith('/')) {
+    pagePath = '/' + pagePath;
+  }
+  
+  return `/${lang}/${effectiveClient}${pagePath}`;
+}, [locales, lang, client]);
 
   return {
     sidebarData,
@@ -190,6 +252,7 @@ export function useSidebarData() {
     isActive,
     getMenuTranslation,
     getLocalizedUrl,
-    locales
+    locales,
+    client
   };
 }

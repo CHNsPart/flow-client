@@ -1,8 +1,9 @@
-// File: app/[lang]/client-layout.tsx
+// Path: app/[lang]/client-layout.tsx
 'use client'
 
 import { ReactNode, useEffect } from 'react'
 import { LangParamProvider } from '@/providers/LangParamProvider'
+import { ClientProvider } from '@/providers/ClientProvider'
 import { isValidLocale } from '@/lib/i18n/settings'
 import { useParams } from 'next/navigation'
 
@@ -11,9 +12,10 @@ export default function ClientLayout({
 }: {
   children: ReactNode
 }) {
-  // Get the lang parameter from the URL using the useParams hook
-  const params = useParams();
-  const lang = params?.lang as string; 
+  // Get the lang and client parameters from the URL
+  const params = useParams<{ lang: string; client: string }>();
+  const lang = params?.lang as string;
+  const client = params?.client as string || 'default';
   
   // Validate the language parameter on the client side
   const validLang = isValidLocale(lang) ? lang : 'en'
@@ -24,8 +26,10 @@ export default function ClientLayout({
   }, [validLang])
   
   return (
-    <LangParamProvider lang={validLang}>
-      {children}
+    <LangParamProvider lang={validLang} clientId={client}>
+      <ClientProvider initialClient={client}>
+        {children}
+      </ClientProvider>
     </LangParamProvider>
   )
 }

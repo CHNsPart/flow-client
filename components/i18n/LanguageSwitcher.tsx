@@ -1,3 +1,4 @@
+// Path: components/i18n/LanguageSwitcher.tsx
 'use client';
 
 import { useState, useEffect } from 'react';
@@ -13,7 +14,7 @@ export function LanguageSwitcher() {
   const [currentLang, setCurrentLang] = useState(defaultLocale);
   const pathname = usePathname();
   const router = useRouter();
-  const params = useParams();
+  const params = useParams<{ lang: string; client: string }>();
   
   // Use useEffect to handle hydration safely
   useEffect(() => {
@@ -46,15 +47,19 @@ export function LanguageSwitcher() {
     // Update HTML lang attribute
     document.documentElement.lang = language;
     
-    // Update the URL to reflect the language change
+    // Update the URL to reflect the language change while preserving client
     if (pathname) {
       // Extract the path without the language prefix
       const pathParts = pathname.split('/');
-      // Remove the first empty string (from initial slash) and the language code
-      const pathWithoutLang = pathParts.slice(2).join('/');
       
-      // Build new URL with new language code
-      const newPath = `/${language}${pathWithoutLang ? `/${pathWithoutLang}` : ''}`;
+      // Get the client from URL (second segment or default)
+      const client = pathParts.length > 2 ? pathParts[2] : 'default';
+      
+      // Get the path after language and client
+      const pathWithoutLangAndClient = pathParts.slice(3).join('/');
+      
+      // Build new URL with new language code but preserve client
+      const newPath = `/${language}/${client}${pathWithoutLangAndClient ? `/${pathWithoutLangAndClient}` : ''}`;
       router.push(newPath);
     }
   };

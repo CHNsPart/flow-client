@@ -1,9 +1,13 @@
-// /middleware.ts
+// Path: middleware.ts
 import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
 import { locales, defaultLocale } from '@/lib/i18n/settings'
+import { companySiteConfigs } from '@/config'
 import Negotiator from 'negotiator'
 import { match as matchLocale } from '@formatjs/intl-localematcher'
+
+// Default client if not specified
+const defaultClient = 'default';
 
 // Get the preferred locale based on the request
 function getLocale(request: NextRequest): string {
@@ -23,45 +27,56 @@ function getLocale(request: NextRequest): string {
   return matchLocale(languages, locales, defaultLocale)
 }
 
+// Get valid clients from config
+const validClients = ['default', ...Object.keys(companySiteConfigs)];
+
 export function middleware(request: NextRequest) {
   const pathname = request.nextUrl.pathname
   
-  // Check if the pathname already has a locale
-  const pathnameHasLocale = locales.some(
-    locale => pathname.startsWith(`/${locale}/`) || pathname === `/${locale}`
-  )
-  
-  // If it doesn't have a locale, redirect to the preferred locale
-  if (!pathnameHasLocale) {
-    // Exclude handling for static files and api routes
-    if (
-      pathname.startsWith('/_next') || 
-      pathname.startsWith('/api') ||
-      pathname.includes('.')
-    ) {
-      return NextResponse.next()
-    }
-    
-    // Get the locale based on the Accept-Language header
-    const locale = getLocale(request)
-    
-    return NextResponse.redirect(
-      new URL(
-        pathname === '/' ? `/${locale}` : `/${locale}${pathname}`,
-        request.url
-      )
-    )
+  // Skip static files, API routes, etc.
+  if (
+    pathname.startsWith('/_next') || 
+    pathname.startsWith('/api') ||
+    pathname.includes('.')
+  ) {
+    return NextResponse.next()
   }
   
-  return NextResponse.next()
+  // Parse path segments
+  const segments = pathname.split('/').filter(Boolean);
+  // Check if the first segment is a valid locale
+  const hasLocale = segments.length > 0 && locales.includes(segments[0] as 'en' | 'fr' | 'es');
+  const locale = hasLocale ? segments[0] : getLocale(request);
+  
+  // Check if the second segment is a valid client
+  const hasClient = segments.length > 1 && validClients.includes(segments[1]);
+  const client = hasClient ? segments[1] : defaultClient;
+  
+  // If path doesn't have locale or client, redirect to the proper URL
+  if (!hasLocale || !hasClient) {
+    // Construct the new URL with locale and client
+    let newPath: string;
+    
+    if (!hasLocale && !hasClient) {
+      // Neither locale nor client - add both
+      newPath = `/${locale}/${client}${segments.length > 0 ? '/' + segments.join('/') : ''}`;
+    } else if (hasLocale && !hasClient) {
+      // Has locale but no client - add client
+      newPath = `/${locale}/${client}${segments.length > 1 ? '/' + segments.slice(1).join('/') : ''}`;
+    } else {
+      // Should never reach here due to the earlier conditions
+      return NextResponse.next();
+    }
+    
+    return NextResponse.redirect(new URL(newPath, request.url));
+  }
+  
+  return NextResponse.next();
 }
 
 export const config = {
   matcher: [
-    // Match all paths except:
-    // - Static files (with extensions like .jpg, .png, etc)
-    // - API routes
-    // - Next.js internals
+    // Match all paths except static files, API routes, etc.
     '/((?!api|_next/static|_next/image|favicon.ico|.*\\.).*)'
   ],
 }

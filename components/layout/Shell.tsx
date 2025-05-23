@@ -1,4 +1,4 @@
-// File: components/layout/Shell.tsx
+// Path: components/layout/Shell.tsx
 'use client';
 
 import { ReactNode, useState, useEffect } from 'react';
@@ -8,6 +8,8 @@ import { TiAdjustBrightness, TiAdjustContrast } from 'react-icons/ti';
 import { useTheme } from 'next-themes';
 import { LanguageSwitcher } from '@/components/i18n/LanguageSwitcher';
 import { Sidebar, SidebarTrigger } from './sidebar';
+import { useParams } from 'next/navigation';
+import { getThemeForClient } from '@/config/themes';
 import { 
   SidebarProvider, 
   SidebarInset
@@ -21,6 +23,18 @@ function ShellContent({ children }: { children: ReactNode }) {
   const { t } = useTranslationHelper();
   const { theme, setTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
+  
+  // Get client ID from URL params
+  const params = useParams<{ client: string }>();
+  const urlClientId = params?.client || 'default';
+  
+  // Give environment variable precedence
+  const envThemeId = process.env.NEXT_PUBLIC_THEME;
+  const effectiveClientId = envThemeId || urlClientId;
+  
+  // Get theme based on effective client ID
+  const clientTheme = getThemeForClient(effectiveClientId);
+  const companyName = clientTheme.company;
 
   // After mounting, set mounted to true to enable theme-dependent rendering
   useEffect(() => {
@@ -39,7 +53,9 @@ function ShellContent({ children }: { children: ReactNode }) {
             <div className="flex items-center">
               <SidebarTrigger className="mr-4" />
               
-              <h1 className="text-xl font-semibold">{mounted ? t('common.app.name') : 'Flow Hub'}</h1>
+              <h1 className="text-xl font-semibold">
+                {mounted ? `${t('common.app.name')} - ${companyName}` : 'Flow Hub'}
+              </h1>
             </div>
             
             <div className="flex items-center space-x-4">

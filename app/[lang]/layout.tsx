@@ -7,7 +7,6 @@ import { I18nProvider } from "@/providers/i18n-provider"
 import { ThemeProvider } from '@/providers/theme-provider'
 import { Geist, Geist_Mono } from "next/font/google"
 import ClientLayout from './client-layout'
-import { Shell } from '@/components/layout/Shell'
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -19,9 +18,18 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
-// Generate static params for all supported languages
+const validClients = ['default', 'companyA', 'companyB'];
+
 export function generateStaticParams() {
-  return locales.map(lang => ({ lang }))
+  const params = [];
+  
+  for (const lang of locales) {
+    for (const client of validClients) {
+      params.push({ lang, client });
+    }
+  }
+  
+  return params;
 }
 
 // Fixed metadata that doesn't depend on the dynamic route
@@ -75,19 +83,25 @@ export const metadata: Metadata = {
   manifest: `${activeSiteConfig.url}/site.webmanifest`,
 }
 
-export default function LangLayout({
+interface LangLayoutProps {
+  children: ReactNode;
+  params: Promise<{ lang: string }>;
+}
+
+export default async function LangLayout({
   children,
-}: {
-  children: ReactNode
-}) {
+  params
+}: LangLayoutProps) {
+  const { lang } = await params;
+  
+  const validatedLang = locales.includes(lang as typeof locales[number]) ? lang : defaultLocale;
+  
   return (
-    <I18nProvider locale={defaultLocale}>
+    <I18nProvider locale={validatedLang}>
       <div className={`${geistSans.variable} ${geistMono.variable}`}>
         <ThemeProvider defaultTheme="system">
           <ClientLayout>
-            <Shell>
-              {children}
-            </Shell>
+            {children}
           </ClientLayout>
         </ThemeProvider>
       </div>
