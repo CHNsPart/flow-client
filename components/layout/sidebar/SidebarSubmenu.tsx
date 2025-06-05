@@ -1,6 +1,6 @@
-// /components/layout/sidebar/SidebarSubmenu.tsx
+// Path: components/layout/sidebar/SidebarSubmenu.tsx
 import { memo } from 'react';
-import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 import { cn } from '@/lib/utils';
 import { DynamicIcon } from './DynamicIcon';
 import { SidebarSubmenuProps } from './types';
@@ -8,6 +8,7 @@ import { Collapsible, CollapsibleContent } from '@/components/ui/collapsible';
 
 /**
  * Submenu component for the sidebar
+ * Modified to use Next.js Link for client-side navigation without page reload
  * Using memo to prevent unnecessary re-renders
  */
 export const SidebarSubmenu = memo(function SidebarSubmenu({
@@ -20,8 +21,6 @@ export const SidebarSubmenu = memo(function SidebarSubmenu({
   t,
   isCollapsed
 }: SidebarSubmenuProps) {
-  const router = useRouter();
-
   if (!subMenuItems || subMenuItems.length === 0) {
     return null;
   }
@@ -47,25 +46,25 @@ export const SidebarSubmenu = memo(function SidebarSubmenu({
             const isSubItemActive = subItem.url !== '#' && isActive(subItem.url);
             const isSubHashLink = subItem.url === '#';
             
-            // Handle clicking on submenu item
-            const handleClick = (e: React.MouseEvent) => {
-              e.preventDefault();
-              if (!isSubHashLink) {
-                const targetUrl = getLocalizedUrl(subItem.url);
-                router.push(targetUrl);
-              }
-            };
-
+            // Generate the localized URL
+            const href = isSubHashLink ? '#' : getLocalizedUrl(subItem.url);
+            
             return (
-              <div
+              <Link
                 key={`${menuKey}-submenu-${index}`}
+                href={href}
+                onClick={(e) => {
+                  // Prevent default navigation for hash links
+                  if (isSubHashLink) {
+                    e.preventDefault();
+                  }
+                }}
                 className={cn(
                   "flex items-center gap-3 rounded-md p-2 text-sm cursor-pointer",
                   "hover:bg-primary/10 dark:hover:bg-primary/30 hover:text-foreground",
                   isSubItemActive 
                   && "text-primary hover:text-primary font-medium bg-primary/10 dark:bg-primary/30 dark:text-primary-foreground", 
                 )}
-                onClick={handleClick}
               >
                 <span className={cn(
                   "text-sidebar-foreground",
@@ -74,7 +73,7 @@ export const SidebarSubmenu = memo(function SidebarSubmenu({
                   <DynamicIcon iconName={subItem.icon} className="size-4" />
                 </span>
                 <span className="text-sm truncate">{subItemName}</span>
-              </div>
+              </Link>
             );
           })}
         </div>

@@ -22,7 +22,7 @@ i18next
     resources: {
       en: {
         common: enCommon,
-        flowConfig: enCommon.flowConfig || {},
+        flowConfig: enCommon.common.flowConfig || {},
       },
       fr: {
         common: frCommon,

@@ -1,4 +1,4 @@
-// /components/layout/sidebar/SidebarFooter.tsx
+// Path: components/layout/sidebar/SidebarFooter.tsx
 'use client';
 
 import { useState, useRef, useEffect } from 'react';
@@ -11,6 +11,7 @@ import {
   CollapsibleTrigger 
 } from '@/components/ui/collapsible';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
+import { SidebarCollapsedUserMenu } from './SidebarCollapsedUserMenu';
 
 /**
  * Footer component for the sidebar with user profile and logout
@@ -36,14 +37,10 @@ export function SidebarFooter({ user, t, isCollapsed }: SidebarFooterProps) {
   // Get current year for copyright text
   const currentYear = new Date().getFullYear();
 
+  // Different rendering for collapsed state
   if (isCollapsed) {
     return (
-      <div className="py-4 flex flex-col items-center">
-        <Avatar className="size-8 rounded-full">
-          <AvatarImage src={user.avatar} alt={user.name} className="object-cover" />
-          <AvatarFallback>{user.name.charAt(0)}</AvatarFallback>
-        </Avatar>
-      </div>
+      <SidebarCollapsedUserMenu user={user} t={t} />
     );
   }
 

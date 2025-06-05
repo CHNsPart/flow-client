@@ -1,4 +1,4 @@
-// /components/layout/sidebar/types.ts
+// Path: components/layout/sidebar/types.ts
 import { SidebarData, MenuItem, SubMenuItem } from '@/types/sidebar';
 
 /**
@@ -83,4 +83,51 @@ export interface SidebarFooterProps {
 export interface SidebarErrorProps {
   error: string;
   onRetry: () => void;
+}
+
+/**
+ * Props for the SidebarPopover component
+ */
+export interface SidebarPopoverProps {
+  children: React.ReactNode;
+  triggerRef: React.RefObject<HTMLElement>;
+  isOpen: boolean;
+  onClose: () => void;
+  className?: string;
+  getPosition?: () => { top: number; left: number };
+}
+
+/**
+ * Props for the SidebarCollapsedMenuItem component
+ */
+export interface SidebarCollapsedMenuItemProps {
+  menuKey: string;
+  icon: string;
+  title: string;
+  isActive: boolean;
+  hasSubmenu: boolean;
+  subMenuItems?: SubMenuItem[];
+  directUrl?: string;
+  getLocalizedUrl: (url: string) => string;
+  getMenuTranslation: (key: string, subKey?: string) => string;
+  t: (key: string) => string;
+}
+
+/**
+ * Props for the SidebarCollapsedUserMenu component
+ */
+export interface SidebarCollapsedUserMenuProps {
+  user: {
+    name: string;
+    email: string;
+    avatar: string;
+  };
+  t: (key: string) => string;
+}
+
+/**
+ * Props for the SidebarSkeleton component
+ */
+export interface SidebarSkeletonProps {
+  className?: string;
 }

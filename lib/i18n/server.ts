@@ -11,7 +11,7 @@ import esCommon from '@/public/locales/es/es.json';
 const resources = {
   en: {
     common: enCommon,
-    flowConfig: enCommon.flowConfig || {},
+    flowConfig: enCommon.common.flowConfig || {},
   },
   fr: {
     common: frCommon,

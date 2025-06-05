@@ -4,7 +4,7 @@ import * as React from "react"
 import { Slot } from "@radix-ui/react-slot"
 import { VariantProps, cva } from "class-variance-authority"
 import { PanelLeftIcon } from "lucide-react"
-
+import { getCookie, setCookie } from '@/lib/cookie-utils'
 import { useIsMobile } from "@/hooks/use-mobile"
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
@@ -68,10 +68,53 @@ function SidebarProvider({
 }) {
   const isMobile = useIsMobile()
   const [openMobile, setOpenMobile] = React.useState(false)
+  const [mounted, setMounted] = React.useState(false)
+
+  // Read the cookie state on initial load, but only after mounting
+  const [initialStateLoaded, setInitialStateLoaded] = React.useState(false)
+  const initialState = React.useMemo(() => {
+    // If not mounted yet, return defaultOpen to avoid hydration mismatch
+    if (!mounted) return defaultOpen
+
+    // Get cookie value
+    const savedState = getCookie(SIDEBAR_COOKIE_NAME)
+    
+    // Parse the cookie value (could be 'true', 'false', or undefined)
+    if (savedState === 'true') return true
+    if (savedState === 'false') return false
+    
+    // Default to provided defaultOpen if no cookie exists or value is invalid
+    return defaultOpen
+  }, [defaultOpen, mounted])
+
+  // Handle client-side mounting
+  React.useEffect(() => {
+    setMounted(true)
+    
+    // Set initialStateLoaded to true after we've loaded the cookie value
+    if (!initialStateLoaded) {
+      const savedState = getCookie(SIDEBAR_COOKIE_NAME)
+      if (savedState !== undefined) {
+        setInitialStateLoaded(true)
+      }
+    }
+  }, [initialStateLoaded])
 
   // This is the internal state of the sidebar.
   // We use openProp and setOpenProp for control from outside the component.
-  const [_open, _setOpen] = React.useState(defaultOpen)
+  const [_open, _setOpen] = React.useState(initialState)
+  
+  // Update internal state once after initial mount and cookie load
+  React.useEffect(() => {
+    if (mounted && !initialStateLoaded) {
+      const savedState = getCookie(SIDEBAR_COOKIE_NAME)
+      if (savedState !== undefined) {
+        _setOpen(savedState === 'true')
+        setInitialStateLoaded(true)
+      }
+    }
+  }, [mounted, initialStateLoaded])
+  
   const open = openProp ?? _open
   const setOpen = React.useCallback(
     (value: boolean | ((value: boolean) => boolean)) => {
@@ -82,8 +125,8 @@ function SidebarProvider({
         _setOpen(openState)
       }
 
-      // This sets the cookie to keep the sidebar state.
-      document.cookie = `${SIDEBAR_COOKIE_NAME}=${openState}; path=/; max-age=${SIDEBAR_COOKIE_MAX_AGE}`
+      // This sets the cookie to keep the sidebar state
+      setCookie(SIDEBAR_COOKIE_NAME, String(openState), SIDEBAR_COOKIE_MAX_AGE)
     },
     [setOpenProp, open]
   )
@@ -533,7 +576,7 @@ function SidebarMenuButton({
   }
 
   return (
-    <Tooltip>
+    <Tooltip content={undefined}>
       <TooltipTrigger asChild>{button}</TooltipTrigger>
       <TooltipContent
         side="right"
