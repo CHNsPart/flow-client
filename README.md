@@ -1,175 +1,399 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Flow Hub - Loan Management System (LMS)
 
-## Getting Started
+A multi-tenant loan management system built with Next.js that supports multiple companies with customizable themes, branding, and internationalization.
 
-First, run the development server:
+## 🏗️ Architecture Overview
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
-
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
-
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
-
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
-
-## Global Configuration System
-
-### Overview
-
-Flow Hub includes a comprehensive global configuration system for themes and company-specific settings. This enables easy customization of the application for different companies without code changes, just by modifying environment variables.
+Flow Hub is designed as a multi-tenant application where different companies can have their own:
+- **Custom branding** (logos, colors, company names)
+- **Custom themes** (color schemes for light/dark modes)
+- **Localized content** (English, French, Spanish)
+- **Dynamic sidebar navigation** (configured via API responses)
+- **Company-specific configurations**
 
 ### Key Features
 
-- **Company-specific theming**: Each company can have its own colors, fonts, and styling
-- **Configurable branding**: Company name, logo, favicon, and site metadata
-- **Feature flag management**: Enable/disable features per company
-- **Locale management**: Set default language and supported locales
+- ✅ **Multi-tenant Architecture** - Single codebase serving multiple companies
+- ✅ **Dynamic Theming** - Company-specific colors and branding
+- ✅ **Internationalization** - Support for EN/FR/ES with react-i18next
+- ✅ **Dynamic Sidebar** - Menu structure driven by API responses
+- ✅ **Responsive Design** - Built with Tailwind CSS and shadcn/ui
+- ✅ **Type Safety** - Full TypeScript implementation
+- ✅ **Docker Support** - Containerized deployment
 
-### How to Use
+## 🚀 Quick Start
 
-#### Switching Companies
+### Prerequisites
 
-To switch between different company configurations:
+- Node.js 18+ 
+- npm or yarn
+- Docker (optional)
 
-1. Set the `NEXT_PUBLIC_THEME` environment variable to the desired theme ID:
-   ```
-   NEXT_PUBLIC_THEME=default    # Default Flow Hub theme
-   NEXT_PUBLIC_THEME=companyA   # Company A specific theme
-   ```
+### Local Development
 
-2. The system will automatically apply the corresponding:
-   - Theme (colors, styling)
-   - Company information (name, logo)
-   - Feature flags
-   - Metadata (page titles, descriptions)
-
-#### Adding a New Company
-
-To add a new company theme:
-
-1. Create a new theme file in `config/themes/` (e.g., `companyB.ts`)
-2. Add company-specific site config in `config/site.ts`
-3. Register the new theme in `config/themes/index.ts`
-
-Example for adding Company B:
-
-```typescript
-// config/themes/companyB.ts
-export const companyBTheme: ThemeConfig = {
-  id: "companyB",
-  name: "Company B Theme",
-  company: "Company B Inc.",
-  colors: {
-    light: {
-      // Override colors here
-      primary: "oklch(0.6 0.2 180)", // Custom blue
-      // ...other colors
-    },
-    dark: {
-      // Dark mode colors
-      // ...
-    }
-  },
-  // ...other theme settings
-};
-
-// In config/site.ts
-export const companySiteConfigs: Record<string, Partial<SiteConfig>> = {
-  // ...existing configs
-  companyB: {
-    name: "Company B Flow Hub",
-    description: "Loan Management System for Company B",
-    company: {
-      name: "Company B Inc.",
-      logo: "/logos/companyB-logo.svg",
-      favicon: "/companyB-favicon.ico"
-    },
-    // ...other settings
-  }
-};
+1. **Clone the repository**
+```bash
+git clone <repository-url>
+cd flow-hub
 ```
 
-### Feature Flags
+2. **Install dependencies**
+```bash
+npm install
+```
 
-Flow Hub uses feature flags to enable or disable functionality on a per-company basis. This allows for gradual rollout of features or company-specific customizations.
+3. **Set up environment variables**
+```bash
+# Create .env.local file
+cp .env.example .env.local
+```
 
-#### Available Feature Flags
+Add the following environment variables:
+```env
+# Theme Configuration (optional - defaults to 'default')
+NEXT_PUBLIC_THEME=default
 
-- `enableAnalytics`: Controls whether analytics tracking is enabled
-- `enableNotifications`: Controls notification functionality
-- `enableMultiCompanySupport`: Enables multi-company features
+# API Configuration (optional - uses mock data in development)
+NEXT_PUBLIC_API_BASE_URL=https://api.flowhub.example.com
 
-#### Setting Feature Flags
+# Analytics (optional)
+NEXT_PUBLIC_ENABLE_ANALYTICS=false
+```
 
-Feature flags can be set in multiple ways:
+4. **Start the development server**
+```bash
+npm run dev
+```
 
-1. **Environment variables** (for global defaults):
-   ```
-   # Feature Flags
-   NEXT_PUBLIC_ENABLE_ANALYTICS=false
-   ```
+5. **Open your browser**
+```
+http://localhost:3000
+```
 
-2. **Company-specific overrides** (in `config/site.ts`):
-   ```typescript
-   export const companySiteConfigs: Record<string, Partial<SiteConfig>> = {
-     companyA: {
-       // ...other config
-       featureFlags: {
-         enableAnalytics: true,
-         enableNotifications: false
-       }
-     }
-   };
-   ```
+The application will automatically redirect to:
+```
+http://localhost:3000/en/default/dashboard
+```
 
-3. **Using feature flags in components**:
-   ```typescript
-   import { activeSiteConfig } from "@/config";
+### Docker Development
 
-   function MyComponent() {
-     // Check if analytics is enabled
-     if (activeSiteConfig.featureFlags.enableAnalytics) {
-       // Analytics-related code
-     }
-     
-     return (
-       // Component JSX
-     );
-   }
-   ```
+1. **Build the Docker image**
+```bash
+docker build -t flow-hub .
+```
 
-### Configuration Structure
+2. **Run the container**
+```bash
+docker run -p 3000:3000 -e NEXT_PUBLIC_THEME=default flow-hub
+```
 
-- `config/themes/`: Theme definitions (colors, styling)
-- `config/site.ts`: Site and company configurations
-- `providers/theme-provider.tsx`: Theme application mechanism
-- `lib/theme-utils.ts`: Helper functions for accessing theme values
+### Docker Compose (Recommended)
 
-## Learn More
+Create a `docker-compose.yml` file:
 
-To learn more about Next.js, take a look at the following resources:
+```yaml
+version: '3.8'
+services:
+  flow-hub:
+    build: .
+    ports:
+      - "3000:3000"
+    environment:
+      - NEXT_PUBLIC_THEME=default
+      - NEXT_PUBLIC_API_BASE_URL=https://api.flowhub.example.com
+    volumes:
+      - ./public/brands:/app/public/brands
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Run with:
+```bash
+docker-compose up
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## 🎨 Theme Configuration
 
-## Deploy on Vercel
+### Available Themes
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+- `default` - Flow Hub Inc. (neutral colors)
+- `companyA` - Company A Inc. (blue theme)
+- `companyB` - Company B Inc. (orange theme)
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+### Creating a New Theme
 
-## Author
+1. **Add company assets**
+```
+public/brands/companyC/
+├── companyC.svg          # Company logo
+├── companyC-og-image.jpg # Open Graph image
+└── favicon.ico           # Company favicon
+```
 
-**Touhidul Islam Chayan**  
-GitHub: [@chnspart](https://github.com/chnspart)  
-Website: [chnspart.com](https://chnspart.com)
+2. **Create theme configuration**
+```typescript
+// config/themes/companyC.ts
+import { ThemeConfig } from "./types"
+import { defaultTheme } from "./default"
+
+export const companyCTheme: ThemeConfig = {
+  ...defaultTheme,
+  id: "companyC",
+  name: "Company C Theme",
+  company: "Company C Inc.",
+  colors: {
+    light: {
+      ...defaultTheme.colors.light,
+      primary: "oklch(0.5 0.2 120)", // Green theme
+      // ... customize other colors
+    },
+    dark: {
+      // ... dark mode colors
+    }
+  }
+}
+```
+
+3. **Register the theme**
+```typescript
+// config/themes/index.ts
+import { companyCTheme } from "./companyC"
+
+export const themes: Record<string, ThemeConfig> = {
+  default: defaultTheme,
+  companyA: companyATheme,
+  companyB: companyBTheme,
+  companyC: companyCTheme, // Add your theme
+}
+```
+
+4. **Add site configuration**
+```typescript
+// config/site.ts
+export const companySiteConfigs: Record<string, Partial<SiteConfig>> = {
+  // ... existing configs
+  companyC: {
+    name: "Company C",
+    description: "Loan Management System for Company C",
+    company: {
+      name: "Company C Inc.",
+      logo: "/brands/companyC/companyC.svg",
+      favicon: "/favicon.ico"
+    },
+    // ... other config options
+  }
+}
+```
+
+5. **Update valid clients**
+```typescript
+// config/index.ts
+export const validClients = ['default', 'companyA', 'companyB', 'companyC'];
+```
+
+### Switching Themes
+
+**Development:**
+```bash
+NEXT_PUBLIC_THEME=companyA npm run dev
+```
+
+**Production:**
+```bash
+NEXT_PUBLIC_THEME=companyA npm run build
+npm start
+```
+
+**Docker:**
+```bash
+docker run -p 3000:3000 -e NEXT_PUBLIC_THEME=companyA flow-hub
+```
+
+## 🌐 Internationalization
+
+### Supported Languages
+
+- 🇨🇦 **English (en)** - Default
+- 🇨🇦 **French (fr)** - Canadian French
+- 🇪🇸 **Spanish (es)** - Spanish
+
+### Adding Translations
+
+1. **Add translations to JSON files**
+```json
+// public/locales/en/en.json
+{
+  "common": {
+    "sidebar": {
+      "newCategory": {
+        "title": "New Category",
+        "subcategory": "Subcategory"
+      }
+    }
+  }
+}
+```
+
+2. **Use in components**
+```typescript
+import { useTranslationHelper } from '@/hooks/use-translation-helper'
+
+function MyComponent() {
+  const { t } = useTranslationHelper()
+  
+  return (
+    <h1>{t('common.sidebar.newCategory.title')}</h1>
+  )
+}
+```
+
+### Language Switching
+
+The application automatically detects language from the URL:
+- `/en/default/dashboard` - English
+- `/fr/default/dashboard` - French  
+- `/es/default/dashboard` - Spanish
+
+## 📁 Project Structure
+
+```
+flow-hub/
+├── app/                          # Next.js App Router
+│   ├── [lang]/                   # Language-based routing
+│   │   ├── [client]/             # Client-specific routing
+│   │   │   ├── dashboard/        # Dashboard pages
+│   │   │   ├── tenants-management/
+│   │   │   ├── loan-management/
+│   │   │   └── layout.tsx
+│   │   └── layout.tsx
+│   ├── globals.css               # Global styles
+│   └── layout.tsx
+├── components/                   # Reusable components
+│   ├── ui/                       # shadcn/ui components
+│   ├── layout/                   # Layout components
+│   │   └── sidebar/              # Sidebar components
+│   └── i18n/                     # Internationalization components
+├── config/                       # Configuration files
+│   ├── themes/                   # Theme configurations
+│   │   ├── default.ts
+│   │   ├── companyA.ts
+│   │   └── companyB.ts
+│   └── site.ts                   # Site configurations
+├── lib/                          # Utility libraries
+│   ├── i18n/                     # i18n configuration
+│   └── utils.ts
+├── public/                       # Static assets
+│   ├── brands/                   # Company-specific assets
+│   │   ├── default/
+│   │   ├── companyA/
+│   │   └── companyB/
+│   └── locales/                  # Translation files
+├── providers/                    # React Context providers
+├── services/                     # API services
+├── types/                        # TypeScript type definitions
+└── hooks/                        # Custom React hooks
+```
+
+## 🔧 Environment Variables
+
+| Variable | Description | Default | Required |
+|----------|-------------|---------|----------|
+| `NEXT_PUBLIC_THEME` | Active theme ID | `default` | No |
+| `NEXT_PUBLIC_API_BASE_URL` | Backend API URL | - | No |
+| `NEXT_PUBLIC_APP_URL` | Application URL | `http://localhost:3000` | No |
+| `NEXT_PUBLIC_ENABLE_ANALYTICS` | Enable analytics | `false` | No |
+
+## 🚢 Production Deployment
+
+### Building for Production
+
+```bash
+# Build the application
+npm run build
+
+# Start production server
+npm start
+```
+
+### Docker Production Build
+
+```bash
+# Build production image
+docker build -t flow-hub:latest .
+
+# Run in production mode
+docker run -p 3000:3000 \
+  -e NEXT_PUBLIC_THEME=companyA \
+  -e NODE_ENV=production \
+  flow-hub:latest
+```
+
+### Multi-Company Deployment
+
+You can deploy the same codebase for different companies:
+
+```bash
+# Company A deployment
+docker run -p 3001:3000 -e NEXT_PUBLIC_THEME=companyA flow-hub
+
+# Company B deployment  
+docker run -p 3002:3000 -e NEXT_PUBLIC_THEME=companyB flow-hub
+```
+
+## 🧪 Development Commands
+
+```bash
+# Start development server
+npm run dev
+
+# Build for production
+npm run build
+
+# Start production server
+npm start
+
+# Run linting
+npm run lint
+
+# Type checking
+npx tsc --noEmit
+```
+
+## 📚 API Integration
+
+The sidebar navigation is driven by API responses. In development, mock data is used from `data/mock.json`.
+
+### Sidebar API Response Format
+
+```json
+{
+  "dashboard": {
+    "name": "Dashboard",
+    "description": "Overview of system performance",
+    "icon": "BsFillHouseFill",
+    "url": "/dashboard"
+  },
+  "category-with-submenu": {
+    "name": "Category Name",
+    "description": "Category description",
+    "icon": "BsPeopleFill",
+    "sub-menu": [
+      {
+        "name": "Subcategory",
+        "url": "/category/subcategory",
+        "icon": "BsEyeFill"
+      }
+    ]
+  }
+}
+```
+
+### User Permissions API
+
+The system supports role-based permissions for menu items:
+
+```json
+{
+  "dashboard": true,
+  "tenants-management": true,
+  "loan-management": false
+}
+```
